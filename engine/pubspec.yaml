@@ -1,0 +1,8 @@
+name: oracle_engine
+description: Motor de decisao probabilistico do Project Oracle (Fase 0).
+version: 0.1.0
+publish_to: none
+environment:
+  sdk: ^3.8.0
+dev_dependencies:
+  test: ^1.25.0
