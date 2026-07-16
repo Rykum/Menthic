@@ -8,6 +8,10 @@ class ModelConstants {
   static const double amp = 0.6;
   static const double f0base = 0.10;
   static const double kD = 0.08;
+  // Escala de trabalho: converte p0*energia (<1) em progresso efetivo por hora.
+  // Calibrada (doc 10 A.6) para que a tarefa-exemplo fique conclui­vel e o
+  // agregado amostrado caia ~0.66 (≈ os 63% ilustrativos do doc 10 §C).
+  static const double kWork = 3.0;
 }
 
 double logistic(double x) => 1.0 / (1.0 + math.exp(-x));
