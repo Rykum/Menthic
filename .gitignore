@@ -1,0 +1,34 @@
+# Claude Code / ferramentas locais
+.claude/
+**/tool-results/
+scratchpad/
+
+# SO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# Flutter / Dart (para quando a Fase 0 começar)
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+*.g.dart
+coverage/
+
+# Rust (motor em produção)
+target/
+Cargo.lock
+
+# Segredos / ambiente
+.env
+*.env.local
+*.key
