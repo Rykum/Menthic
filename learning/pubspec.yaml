@@ -1,0 +1,13 @@
+name: oracle_learning
+description: Aprendizado Bayesiano dos traços (digital twin) do Project Oracle.
+version: 0.1.0
+publish_to: none
+environment:
+  sdk: ^3.8.0
+dependencies:
+  oracle_store:
+    path: ../store
+  oracle_engine:
+    path: ../engine
+dev_dependencies:
+  test: ^1.25.0
