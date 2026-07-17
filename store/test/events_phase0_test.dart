@@ -25,6 +25,9 @@ void main() {
     expect(d.payload['cid'], 'estudo');
     expect(d.payload['inicio'], 14.0);
     expect(d.payload['aversivo'], true);
+    expect(d.payload['dur_prevista'], 2.0);
+    expect(d.payload['tipo'], 'estudo');
+    expect(d.payload['prioridade'], 2);
   });
 
   test('tarefaConcluida monta o draft correto', () {
@@ -32,5 +35,14 @@ void main() {
     expect(d.type, EventTypes.tarefaConcluida);
     expect(d.payload['cid'], 'estudo');
     expect(d.payload['atraso_min'], 20.0);
+  });
+
+  test('EventTypes usa as strings de wire corretas', () {
+    expect(EventTypes.sonoRegistrado, 'sono_registrado');
+    expect(EventTypes.compromissoCriado, 'compromisso_criado');
+    expect(EventTypes.tarefaConcluida, 'tarefa_concluida');
+    expect(EventTypes.tarefaNaoConcluida, 'tarefa_nao_concluida');
+    expect(EventTypes.humorRegistrado, 'humor_registrado');
+    expect(EventTypes.previsaoEmitida, 'previsao_emitida');
   });
 }
