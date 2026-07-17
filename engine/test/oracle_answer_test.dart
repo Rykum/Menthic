@@ -4,7 +4,9 @@ import 'package:test/test.dart';
 void main() {
   test('confidenceFromWidth mapeia larguras para rótulos', () {
     expect(confidenceFromWidth(0.05), equals(Confidence.alta));
+    expect(confidenceFromWidth(0.10), equals(Confidence.media));
     expect(confidenceFromWidth(0.15), equals(Confidence.media));
+    expect(confidenceFromWidth(0.20), equals(Confidence.baixa));
     expect(confidenceFromWidth(0.30), equals(Confidence.baixa));
   });
 
