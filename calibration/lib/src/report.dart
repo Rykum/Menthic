@@ -19,7 +19,11 @@ class CalibrationReport {
   });
 }
 
-CalibrationReport buildReport(List<PredOutcome> d, {int bins = 10, int minN = 120}) {
+CalibrationReport buildReport(
+  List<PredOutcome> d, {
+  int bins = 10,
+  int minN = 120,
+}) {
   return CalibrationReport(
     brier: brierScore(d),
     bss: brierSkillScore(d),
