@@ -29,6 +29,7 @@ Prediction predict(
   int innerM = 10,
   int seed = 0,
 }) {
+  assert(outerK > 0 && innerM > 0, 'outerK e innerM devem ser > 0');
   final rng = SeededRng(seed);
   final metRatesPerTheta = <double>[]; // prob epistemica de cumprir a agenda
   final perCommitmentSum = <String, double>{

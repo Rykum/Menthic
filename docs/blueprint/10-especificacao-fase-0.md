@@ -100,6 +100,13 @@ concluiu(tarefa)  = (Σ taxa_progresso·Δ na janela ≥ esforço_necessário)
 > cenário §C fica em ~0,66** — batendo os 63% ilustrativos. Valores maiores
 > saturam a conclusão (≈0,81 em `kWork=4`). Por isso `kWork = 3.0`.
 
+> **Escopo da Fase 0 (estados de atividade):** o `simulateDay` implementado modela
+> apenas **`foco ↔ distração`** (§A.7). O branch `trabalho_raso` da fórmula acima e
+> as demais entradas de `activityAlpha` (`treino`, `deslocamento`, …) — bem como o
+> campo `Commitment.type` — **ainda não são consumidos** na Fase 0; entram na Fase
+> 1, quando compromissos de tipos distintos acumularem fadiga de forma específica.
+> Ficam documentados aqui para não parecerem código morto sem explicação.
+
 ### A.7 Micro-dinâmica intra-janela (semi-Markov, doc 3 §5)
 
 Dentro da janela de um compromisso, alterna foco↔distração:
@@ -127,6 +134,28 @@ update conjugado O(1) (doc 3 §6.1). O que não é, fica no prior por ora.
 > A previsão de conclusão sai da **simulação** usando as posteriors atuais; a
 > **recalibração** (Parte B) corrige viés sistemático da probabilidade final,
 > separada do aprendizado dos traços.
+
+### A.9 Incerteza e confiança na Fase 0 (banda larga por construção)
+
+**Importante — comportamento esperado, não bug** (verificado na implementação):
+na Fase 0 **não há aprendizado ainda**, então `predict` sempre consome os priors
+neutros do dia 0 (`TraitPriors.neutral`), que são largos. Sob esses priors, a taxa
+de conclusão por `θ` é quase-degrau (vai de ~0 a ~1 conforme o `θ` amostrado), de
+modo que a **banda epistêmica `[low, high]` fica ~[0,1]** e a `confiança` resultante
+fica fixada em **`baixa`**. Isso é a incerteza *honesta* de um sistema que ainda não
+te conhece — alinhado ao contrato anti-certeza (doc 2).
+
+Consequências e escopo:
+- A **estimativa central** (§C, ~0,66) é reproduzida; a **faixa estreita "52–71% /
+  confiança média"** do §C é a ilustração **pós-~20 dias de posteriors ajustadas**,
+  e só aparece quando o **aprendizado da Fase 1** existir (shrinkage doc 4 §4.2).
+- O campo `observedDays` no `answerAgenda` é, na Fase 0, **apenas um rótulo** (entra
+  nas limitações), não altera a banda — porque a Fase 0 não tem posteriors por
+  usuário. Quando a Fase 1 tornar os priors por usuário, a banda encolhe e a
+  confiança passa a variar.
+- O teste de aceitação (§C) verifica os **oráculos exatos + estimativa em faixa sã
+  + determinismo**, e **assere explicitamente** que na Fase 0 a confiança é `baixa`
+  (banda larga), para que essa divergência do §C não seja confundida com defeito.
 
 ---
 

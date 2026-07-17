@@ -61,5 +61,40 @@ void main() {
       // o débito de sono aparece entre os fatores (doc 10 espera-o dominante)
       expect(a.factors.any((f) => f.label.contains('sono')), isTrue);
     });
+
+    // Fase 0 NÃO tem aprendizado: predict usa os priors neutros largos, então a
+    // banda epistêmica é ~[0,1] e a confiança fica em `baixa` (incerteza honesta,
+    // doc 10 §A.9). A faixa estreita "52–71% / média" do §C só surge com os
+    // posteriors ajustados da Fase 1. Este teste torna essa realidade explícita.
+    test(
+      'Fase 0: banda larga e confiança baixa por construção (doc 10 §A.9)',
+      () {
+        final state = DayState(
+          sleepDebt: 2.0,
+          dayEnd: 18.0,
+          agenda: const [
+            Commitment(
+              id: 'estudo',
+              start: 14.0,
+              planned: 2.0,
+              type: 'estudo',
+              priority: 2,
+              aversive: true,
+            ),
+          ],
+        );
+        final ans = answerAgenda(
+          state,
+          TraitPriors.neutral,
+          observedDays: 20,
+          seed: 42,
+        );
+        expect(ans.high - ans.low, greaterThan(0.20)); // banda larga
+        expect(
+          ans.confidence,
+          equals(Confidence.baixa),
+        ); // confiança honesta baixa
+      },
+    );
   });
 }

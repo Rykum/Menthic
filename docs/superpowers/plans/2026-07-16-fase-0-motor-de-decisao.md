@@ -1226,3 +1226,11 @@ nunca afrouxar o teste. Documente qualquer ajuste de constante de volta no doc 1
 e calibrada por varredura empírica: **`kWork = 3.0`** dá conclusão monótona no
 débito de sono (0,97 → 0,21 → 0,00) e agregado amostrado ~0,66 no cenário §C
 (≈ os 63% ilustrativos). O teste não foi afrouxado — o modelo foi corrigido.
+
+**Revisão final de branch (achado documentado):** sem aprendizado na Fase 0,
+`predict` usa os priors neutros largos → a banda epistêmica `[low,high]` é ~[0,1] e
+a confiança fica `baixa` por construção (incerteza honesta). A faixa estreita
+"52–71% / média" do doc 10 §C é a ilustração pós-~20 dias de posteriors (Fase 1).
+Documentado em **doc 10 §A.9** e assertado explicitamente no teste de aceitação.
+Também: `trabalho_raso`/`Commitment.type` do doc 10 A.6 ainda não são consumidos na
+Fase 0 (nota adicionada); e `assert(outerK>0 && innerM>0)` em `predict`.
