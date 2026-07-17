@@ -26,6 +26,7 @@ Escopo mínimo da Fase 0 (doc 8): um desfecho, motor em Dart puro, poucos traço
 | Amplitude circadiana | `A` | 0.6 | tamanho da onda dia/noite |
 | Fadiga inicial base | `F₀base` | 0.10 | fadiga ao acordar sem débito |
 | Fadiga por hora de débito | `k_D` | 0.08 | débito de sono → fadiga inicial |
+| Escala de trabalho (progresso/hora) | `kWork` | 3.0 | converte `p0·energia` (<1) em progresso efetivo; **calibrada na implementação** (ver A.6) |
 | Nº de trajetórias Monte Carlo | `N` | 2000 | erro de MC ≈ 1pp |
 | Força do prior (shrinkage) | `n₀` | 10 | "dias" que o prior vale (doc 4 §4.2) |
 | Esquecimento (Fase 0) | `λ` | 1.0 | **sem esquecimento** — janela curta (4–6 sem) |
@@ -84,11 +85,27 @@ F(t+Δ)   = clamp(F(t) + α(atividade)·Δ − r·1{descanso∪refeição}·Δ, 
 
 ```
 esforço_necessário(tarefa) = dur_prevista · exp(o)     # o>0 ⇒ demora mais
-taxa_progresso(t) = p0 · energia(t)          durante foco
-                  = 0.5 · p0 · energia(t)     durante trabalho_raso
-                  = 0                          demais estados
+taxa_progresso(t) = kWork · p0 · energia(t)          durante foco
+                  = 0.5 · kWork · p0 · energia(t)     durante trabalho_raso
+                  = 0                                  demais estados
 concluiu(tarefa)  = (Σ taxa_progresso·Δ na janela ≥ esforço_necessário)
 ```
+
+> **Calibração de `kWork` (feita na implementação — Fase 0):** sem a escala,
+> `taxa_progresso = p0·energia ≈ 0,28/h` torna qualquer tarefa medida em "horas
+> planejadas" estruturalmente inatingível (conclusão ~0% para todo débito de
+> sono), como o teste de aceitação da Task 5 detectou. Varredura empírica de
+> `kWork ∈ {2,3,4,5,6}`: com **`kWork = 3.0`** a taxa com traços fixos é monótona
+> no débito de sono (0,97 → 0,21 → 0,00 para 0/2/4h) e o **agregado amostrado no
+> cenário §C fica em ~0,66** — batendo os 63% ilustrativos. Valores maiores
+> saturam a conclusão (≈0,81 em `kWork=4`). Por isso `kWork = 3.0`.
+
+> **Escopo da Fase 0 (estados de atividade):** o `simulateDay` implementado modela
+> apenas **`foco ↔ distração`** (§A.7). O branch `trabalho_raso` da fórmula acima e
+> as demais entradas de `activityAlpha` (`treino`, `deslocamento`, …) — bem como o
+> campo `Commitment.type` — **ainda não são consumidos** na Fase 0; entram na Fase
+> 1, quando compromissos de tipos distintos acumularem fadiga de forma específica.
+> Ficam documentados aqui para não parecerem código morto sem explicação.
 
 ### A.7 Micro-dinâmica intra-janela (semi-Markov, doc 3 §5)
 
@@ -117,6 +134,28 @@ update conjugado O(1) (doc 3 §6.1). O que não é, fica no prior por ora.
 > A previsão de conclusão sai da **simulação** usando as posteriors atuais; a
 > **recalibração** (Parte B) corrige viés sistemático da probabilidade final,
 > separada do aprendizado dos traços.
+
+### A.9 Incerteza e confiança na Fase 0 (banda larga por construção)
+
+**Importante — comportamento esperado, não bug** (verificado na implementação):
+na Fase 0 **não há aprendizado ainda**, então `predict` sempre consome os priors
+neutros do dia 0 (`TraitPriors.neutral`), que são largos. Sob esses priors, a taxa
+de conclusão por `θ` é quase-degrau (vai de ~0 a ~1 conforme o `θ` amostrado), de
+modo que a **banda epistêmica `[low, high]` fica ~[0,1]** e a `confiança` resultante
+fica fixada em **`baixa`**. Isso é a incerteza *honesta* de um sistema que ainda não
+te conhece — alinhado ao contrato anti-certeza (doc 2).
+
+Consequências e escopo:
+- A **estimativa central** (§C, ~0,66) é reproduzida; a **faixa estreita "52–71% /
+  confiança média"** do §C é a ilustração **pós-~20 dias de posteriors ajustadas**,
+  e só aparece quando o **aprendizado da Fase 1** existir (shrinkage doc 4 §4.2).
+- O campo `observedDays` no `answerAgenda` é, na Fase 0, **apenas um rótulo** (entra
+  nas limitações), não altera a banda — porque a Fase 0 não tem posteriors por
+  usuário. Quando a Fase 1 tornar os priors por usuário, a banda encolhe e a
+  confiança passa a variar.
+- O teste de aceitação (§C) verifica os **oráculos exatos + estimativa em faixa sã
+  + determinismo**, e **assere explicitamente** que na Fase 0 a confiança é `baixa`
+  (banda larga), para que essa divergência do §C não seja confundida com defeito.
 
 ---
 
