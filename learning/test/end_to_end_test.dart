@@ -9,15 +9,23 @@ void main() {
   Future<InMemoryEventStore> historico() async {
     final store = InMemoryEventStore();
     for (var i = 0; i < 10; i++) {
-      await store.append(compromissoCriado(
-        ts: ts, cid: 'c$i', inicio: 14.0, durPrevista: 2.0, tipo: 'estudo',
-        aversivo: true,
-      ));
-      await store.append(EventDraft(
-        ts: ts,
-        type: EventTypes.tarefaConcluida,
-        payload: {'cid': 'c$i', 'atraso_min': 15.0, 'dur_real': 2.3},
-      ));
+      await store.append(
+        compromissoCriado(
+          ts: ts,
+          cid: 'c$i',
+          inicio: 14.0,
+          durPrevista: 2.0,
+          tipo: 'estudo',
+          aversivo: true,
+        ),
+      );
+      await store.append(
+        EventDraft(
+          ts: ts,
+          type: EventTypes.tarefaConcluida,
+          payload: {'cid': 'c$i', 'atraso_min': 15.0, 'dur_real': 2.3},
+        ),
+      );
     }
     return store;
   }
@@ -40,16 +48,28 @@ void main() {
       dayEnd: 18.0,
       agenda: const [
         Commitment(
-          id: 'estudo', start: 14.0, planned: 2.0, type: 'estudo',
-          priority: 2, aversive: true,
+          id: 'estudo',
+          start: 14.0,
+          planned: 2.0,
+          type: 'estudo',
+          priority: 2,
+          aversive: true,
         ),
       ],
     );
 
-    final ansNeutro =
-        answerAgenda(state, TraitPriors.neutral, observedDays: 0, seed: 7);
-    final ansAprendido =
-        answerAgenda(state, learned, observedDays: 10, seed: 7);
+    final ansNeutro = answerAgenda(
+      state,
+      TraitPriors.neutral,
+      observedDays: 0,
+      seed: 7,
+    );
+    final ansAprendido = answerAgenda(
+      state,
+      learned,
+      observedDays: 10,
+      seed: 7,
+    );
 
     expect(ansAprendido.estimate, inInclusiveRange(0.0, 1.0));
     expect(ansAprendido.low, lessThanOrEqualTo(ansAprendido.estimate));
