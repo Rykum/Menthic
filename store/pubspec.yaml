@@ -1,0 +1,12 @@
+name: oracle_store
+description: Camada de dados (event sourcing) do Project Oracle.
+version: 0.1.0
+publish_to: none
+environment:
+  sdk: ^3.8.0
+dependencies:
+  oracle_engine:
+    path: ../engine
+  sqlite3: ^2.4.0
+dev_dependencies:
+  test: ^1.25.0
