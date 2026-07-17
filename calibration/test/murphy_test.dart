@@ -42,4 +42,11 @@ void main() {
     final bins = reliabilityDiagram(const [PredOutcome(1.0, 1)]);
     expect(bins[9].n, 1);
   });
+
+  test('murphy([]) retorna componentes NaN', () {
+    final m = murphy(const []);
+    expect(m.reliability, isNaN);
+    expect(m.resolution, isNaN);
+    expect(m.uncertainty, isNaN);
+  });
 }
