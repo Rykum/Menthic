@@ -18,7 +18,7 @@ class InMemoryEventStore implements EventStore {
   Future<Event> append(EventDraft d) async {
     final e = Event(
       id: _nextId++,
-      ts: d.ts,
+      ts: d.ts.toUtc(),
       type: d.type,
       payload: d.payload,
       origin: d.origin,
@@ -60,4 +60,7 @@ class InMemoryEventStore implements EventStore {
 
   @override
   Future<void> clear() async => _events.clear();
+
+  @override
+  Future<void> close() async {}
 }

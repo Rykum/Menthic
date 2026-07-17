@@ -64,7 +64,7 @@ class SqliteEventStore implements EventStore {
     );
     return Event(
       id: _db.lastInsertRowId,
-      ts: d.ts,
+      ts: d.ts.toUtc(),
       type: d.type,
       payload: d.payload,
       origin: d.origin,
@@ -107,4 +107,7 @@ class SqliteEventStore implements EventStore {
   Future<void> clear() async {
     _db.execute('DELETE FROM events;');
   }
+
+  @override
+  Future<void> close() async => _db.dispose();
 }

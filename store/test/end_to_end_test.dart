@@ -7,24 +7,34 @@ void main() {
 
   Future<InMemoryEventStore> seeded() async {
     final s = InMemoryEventStore();
-    await s.append(sonoRegistrado(ts: DateTime.utc(2026, 7, 17, 7), horas: 5.0));
-    await s.append(compromissoCriado(
-      ts: DateTime.utc(2026, 7, 17, 8),
-      cid: 'estudo',
-      inicio: 14.0,
-      durPrevista: 2.0,
-      tipo: 'estudo',
-      prioridade: 2,
-      aversivo: true,
-    ));
+    await s.append(
+      sonoRegistrado(ts: DateTime.utc(2026, 7, 17, 7), horas: 5.0),
+    );
+    await s.append(
+      compromissoCriado(
+        ts: DateTime.utc(2026, 7, 17, 8),
+        cid: 'estudo',
+        inicio: 14.0,
+        durPrevista: 2.0,
+        tipo: 'estudo',
+        prioridade: 2,
+        aversivo: true,
+      ),
+    );
     return s;
   }
 
   test('pipeline eventos -> derivação -> motor -> OracleAnswer', () async {
     final store = await seeded();
-    final ds = await const DayStateDeriver(DerivationConfig(dayEnd: 18.0))
-        .derive(store, date);
-    final ans = answerAgenda(ds, TraitPriors.neutral, observedDays: 20, seed: 42);
+    final ds = await const DayStateDeriver(
+      DerivationConfig(dayEnd: 18.0),
+    ).derive(store, date);
+    final ans = answerAgenda(
+      ds,
+      TraitPriors.neutral,
+      observedDays: 20,
+      seed: 42,
+    );
 
     expect(ds.sleepDebt, closeTo(2.0, 1e-9));
     expect(ans.estimate, inInclusiveRange(0.0, 1.0));
@@ -44,16 +54,20 @@ void main() {
   test('paridade: SQLite produz o mesmo DayState que memória', () async {
     final mem = await seeded();
     final sq = SqliteEventStore.memory();
-    await sq.append(sonoRegistrado(ts: DateTime.utc(2026, 7, 17, 7), horas: 5.0));
-    await sq.append(compromissoCriado(
-      ts: DateTime.utc(2026, 7, 17, 8),
-      cid: 'estudo',
-      inicio: 14.0,
-      durPrevista: 2.0,
-      tipo: 'estudo',
-      prioridade: 2,
-      aversivo: true,
-    ));
+    await sq.append(
+      sonoRegistrado(ts: DateTime.utc(2026, 7, 17, 7), horas: 5.0),
+    );
+    await sq.append(
+      compromissoCriado(
+        ts: DateTime.utc(2026, 7, 17, 8),
+        cid: 'estudo',
+        inicio: 14.0,
+        durPrevista: 2.0,
+        tipo: 'estudo',
+        prioridade: 2,
+        aversivo: true,
+      ),
+    );
     final a = await const DayStateDeriver().derive(mem, date);
     final b = await const DayStateDeriver().derive(sq, date);
     expect(a.sleepDebt, b.sleepDebt);

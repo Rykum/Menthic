@@ -5,6 +5,7 @@ import 'package:test/test.dart';
 void runEventStoreContract(EventStore Function() create) {
   late EventStore store;
   setUp(() => store = create());
+  tearDown(() => store.close());
 
   EventDraft draft(int hour, String type) => EventDraft(
     ts: DateTime.utc(2026, 7, 17, hour),

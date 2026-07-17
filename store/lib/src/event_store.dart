@@ -11,4 +11,5 @@ abstract class EventStore {
   Future<void> deleteById(int id);
   Future<void> deleteWhere({DateTime? from, DateTime? to, List<String>? types});
   Future<void> clear();
+  Future<void> close();
 }
