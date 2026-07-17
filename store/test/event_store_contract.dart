@@ -29,6 +29,19 @@ void runEventStoreContract(EventStore Function() create) {
     expect(all.map((e) => e.ts.hour), [8, 9, 10]);
   });
 
+  test('desempata ts igual por id (ordem de append)', () async {
+    final ts = DateTime.utc(2026, 7, 17, 8);
+    final first = await store.append(
+      EventDraft(ts: ts, type: 'a', payload: const {'n': 1}),
+    );
+    final second = await store.append(
+      EventDraft(ts: ts, type: 'b', payload: const {'n': 2}),
+    );
+    final all = await store.all();
+    expect(all.map((e) => e.id), [first.id, second.id]);
+    expect(all.map((e) => e.type), ['a', 'b']);
+  });
+
   test('query filtra por [from, to) meio-aberto', () async {
     await store.append(draft(8, 'x'));
     await store.append(draft(9, 'y'));
