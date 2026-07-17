@@ -31,4 +31,19 @@ void main() {
     expect(r.bss, lessThan(0.05)); // BSS = 0
     expect(r.passed, isFalse);
   });
+
+  test('FALHA só por calibração (tem skill, mal calibrado, n>=120)', () {
+    final d = [
+      ...List.filled(60, const PredOutcome(0.7, 1)),
+      ...List.filled(60, const PredOutcome(0.6, 0)),
+    ];
+    final r = evaluateGate(d);
+    expect(r.n, 120);
+    expect(r.bss, greaterThanOrEqualTo(0.05)); // tem skill (bss=0.1)
+    expect(
+      r.calibrationInTheLarge,
+      greaterThanOrEqualTo(0.05),
+    ); // mal calibrado (0.15)
+    expect(r.passed, isFalse); // reprovado pela calibração, não pelo skill
+  });
 }
