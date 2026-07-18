@@ -8,9 +8,27 @@ decisões sob incerteza — nunca prometendo prever o futuro.
 > disponíveis, estes são os cenários mais prováveis, com esta confiança e estas
 > limitações"* — e **compara estratégias** em vez de decidir pelo usuário.
 
-**Status:** 📐 Blueprint técnico completo · pré-implementação (Fase 0).
-Este repositório contém o **dossiê de engenharia** do produto. O código ainda não
-começou — a próxima etapa é a Fase 0 (protótipo N=1 em Flutter/Dart).
+**Status:** 🧠 Núcleo headless completo · **falta a UI em Flutter**.
+O blueprint técnico está em `docs/blueprint/`. O motor de inteligência já está
+construído e testado em **4 pacotes Dart puros** (88 testes, `dart analyze`
+limpo). A próxima etapa é a **UI em Flutter**, que torna tudo utilizável e permite
+rodar o experimento N=1.
+
+## Estado atual (pacotes na `main`)
+
+| Pacote | Fase | O que faz | Testes |
+|---|---|---|---|
+| [`engine/`](engine) (`oracle_engine`) | 0.1 | Motor de decisão: Monte Carlo aninhado, semi-Markov, energia/fadiga, sensibilidade, `OracleAnswer` | 28 |
+| [`store/`](store) (`oracle_store`) | 0.2 | Event sourcing on-device (memória + SQLite), `DayStateDeriver` (eventos → estado do dia) | 29 |
+| [`calibration/`](calibration) (`oracle_calibration`) | 0.3 | Brier/BSS, diagrama de confiabilidade, decomposição de Murphy, veredito do gate, recalibração Platt | 23 |
+| [`learning/`](learning) (`oracle_learning`) | 0.4 | Aprendizado Bayesiano conjugado dos traços (`o`, `ρ`) → twin atualizado | 8 |
+
+O ciclo do doc 3 fecha headless:
+`estado → predict (engine) → log (store) → desfecho → calibração → aprendizado → twin melhor → predict`.
+
+**Próximo:** UI em Flutter (entrada de 1 toque, revisão noturna, render do
+`OracleAnswer`) — ver [doc 08](docs/blueprint/08-roadmap-de-construcao.md).
+Especificações e planos de cada fase em [`docs/superpowers/`](docs/superpowers).
 
 ---
 
@@ -58,10 +76,12 @@ O documento de design que originou o dossiê está em
 
 ## Próximo passo
 
-Construir a **Fase 0**: protótipo N=1 que prova o loop `estado → simulação →
-previsão → desfecho → calibração`. Gate: o Brier bate o baseline trivial em 4–6
-semanas de uso. Detalhe em [doc 10](docs/blueprint/10-especificacao-fase-0.md) e
-[doc 08](docs/blueprint/08-roadmap-de-construcao.md).
+Construir a **UI em Flutter** sobre os 4 pacotes headless: entrada de 1 toque,
+revisão noturna e render do `OracleAnswer` (faixa, confiança, fatores). É o que
+torna o app utilizável e permite rodar o **experimento N=1** — o gate falsificável
+(Brier bate o baseline trivial em 4–6 semanas) já está implementado em
+`oracle_calibration`. Detalhe em [doc 10](docs/blueprint/10-especificacao-fase-0.md)
+e [doc 08](docs/blueprint/08-roadmap-de-construcao.md).
 
 ---
 
