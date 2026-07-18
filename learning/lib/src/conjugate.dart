@@ -18,6 +18,8 @@ class NormalPosterior {
   const NormalPosterior(this.mean, this.variance);
 
   /// Normal-Normal com variância de observação conhecida [sigma2].
+  /// [sigma2] é a variância de observação assumida (σ=0.5 na escala log de
+  /// duração) — controla quanto cada observação puxa o posterior.
   NormalPosterior updateObservations(List<double> xs, {double sigma2 = 0.25}) {
     if (xs.isEmpty) return this;
     final n = xs.length;
