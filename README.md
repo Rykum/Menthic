@@ -8,11 +8,12 @@ decisões sob incerteza — nunca prometendo prever o futuro.
 > disponíveis, estes são os cenários mais prováveis, com esta confiança e estas
 > limitações"* — e **compara estratégias** em vez de decidir pelo usuário.
 
-**Status:** 🧠 Núcleo headless completo · **falta a UI em Flutter**.
+**Status:** 🧠 Núcleo headless completo · 🎨 UI Flutter iniciada
+(design system + Splash/Login/Cadastro). Próximo: Home real (OracleAnswer).
 O blueprint técnico está em `docs/blueprint/`. O motor de inteligência já está
 construído e testado em **4 pacotes Dart puros** (88 testes, `dart analyze`
-limpo). A próxima etapa é a **UI em Flutter**, que torna tudo utilizável e permite
-rodar o experimento N=1.
+limpo). A UI em Flutter vive em `app/` (design system glass+neumorphism e
+telas de entrada prontas).
 
 ## Estado atual (pacotes na `main`)
 
