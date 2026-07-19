@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,10 @@ Future<void> main() async {
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // Cache offline: leitura/escrita sem rede, sync automático depois.
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
     );
   } catch (_) {
     // Sem Firebase (plataforma não configurada/offline no boot): o app segue
