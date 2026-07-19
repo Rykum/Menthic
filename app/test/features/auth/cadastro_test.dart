@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:menthic/features/auth/cadastro_screen.dart';
 import 'package:menthic/features/auth/login_screen.dart';
-import 'package:menthic/features/home/home_screen.dart';
+import 'package:menthic/features/today/today_screen.dart';
 
 GoRouter _router() => GoRouter(
   initialLocation: '/cadastro',
@@ -20,7 +20,11 @@ GoRouter _router() => GoRouter(
       name: 'login',
       builder: (c, s) => const LoginScreen(),
     ),
-    GoRoute(path: '/home', name: 'home', builder: (c, s) => const HomeScreen()),
+    GoRoute(
+      path: '/hoje',
+      name: 'hoje',
+      builder: (c, s) => const TodayScreen(),
+    ),
   ],
 );
 
@@ -59,7 +63,7 @@ void main() {
     await _pump(tester);
     await _fill(tester, 'segredo', 'segredo');
     await _tap(tester, 'Cadastar');
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(TodayScreen), findsOneWidget);
   });
 
   testWidgets('"já possuo conta" vai para login', (tester) async {

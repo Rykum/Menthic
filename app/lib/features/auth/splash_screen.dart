@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../data/providers.dart';
 import '../../design/design.dart';
 import 'local_auth.dart';
 
@@ -24,7 +25,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (s == AnimationStatus.completed && mounted) {
         final logged = await ref.read(localAuthProvider).isLoggedIn();
         if (!mounted) return;
-        context.goNamed(logged ? 'home' : 'login');
+        if (!logged) {
+          context.goNamed('login');
+          return;
+        }
+        final onboarded = await ref.read(priorsRepoProvider).onboarded();
+        if (!mounted) return;
+        context.goNamed(onboarded ? 'hoje' : 'onboarding');
       }
     });
   }
