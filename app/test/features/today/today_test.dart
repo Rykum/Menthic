@@ -75,6 +75,55 @@ void main() {
     expect(find.text('Limitações'), findsOneWidget);
   });
 
+  testWidgets('dia ruim mostra estratégias e o tap grava estrategia_aceita', (
+    tester,
+  ) async {
+    final now = DateTime.now().toUtc();
+    SharedPreferences.setMockInitialValues({
+      'logged_in': true,
+      'event_store_v1': jsonEncode([
+        {
+          'ts': now.toIso8601String(),
+          'type': 'sono_registrado',
+          'payload': {'horas': 3.0},
+          'origin': 'manual',
+        },
+        {
+          'ts': now.toIso8601String(),
+          'type': 'compromisso_criado',
+          'payload': {
+            'cid': 'estudo',
+            'inicio': 18.0,
+            'dur_prevista': 2.5,
+            'tipo': 'foco',
+            'prioridade': 2,
+            'aversivo': false,
+          },
+          'origin': 'manual',
+        },
+      ]),
+    });
+    await _pump(tester);
+
+    await _tap(tester, 'Prever meu dia');
+    expect(find.textContaining('Se seu objetivo'), findsOneWidget);
+    expect(find.textContaining('▸'), findsWidgets);
+
+    await tester.ensureVisible(find.textContaining('▸').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('▸').first);
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    final events = jsonDecode(prefs.getString('event_store_v1')!) as List;
+    final aceitas = events
+        .cast<Map>()
+        .where((e) => e['type'] == 'estrategia_aceita')
+        .toList();
+    expect(aceitas, hasLength(1));
+    expect((aceitas.single['payload'] as Map)['id'], isNotEmpty);
+  });
+
   testWidgets('previsão de hoje re-hidrata após reload, sem novo evento', (
     tester,
   ) async {

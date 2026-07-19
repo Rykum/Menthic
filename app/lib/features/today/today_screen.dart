@@ -35,6 +35,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   double? _sonoHoje;
   List<_CommitmentRow> _agenda = [];
   OracleAnswer? _answer;
+  List<Strategy> _strategies = [];
   int _observedDays = 0;
 
   @override
@@ -134,6 +135,12 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       observedDays: days.length,
       seed: 0,
     );
+    final strategies = suggestStrategies(
+      state,
+      priors,
+      observedDays: days.length,
+      seed: 0,
+    );
     if (persist) {
       await store.append(
         EventDraft(
@@ -150,8 +157,24 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     if (!mounted) return;
     setState(() {
       _answer = answer;
+      _strategies = strategies;
       _observedDays = days.length;
     });
+  }
+
+  Future<void> _anotarEstrategia(Strategy s) async {
+    final store = await ref.read(eventStoreProvider.future);
+    await store.append(
+      EventDraft(
+        ts: DateTime.now().toUtc(),
+        type: 'estrategia_aceita',
+        payload: {'id': s.id, 'label': s.label, 'delta': s.delta},
+      ),
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Anotado: ${s.label}.')));
   }
 
   Future<void> _abrirSheetCompromisso() async {
@@ -408,7 +431,12 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
             ),
             if (_answer != null) ...[
               const SizedBox(height: MSpace.md),
-              AnswerCard(answer: _answer!, observedDays: _observedDays),
+              AnswerCard(
+                answer: _answer!,
+                observedDays: _observedDays,
+                strategies: _strategies,
+                onStrategyTap: _anotarEstrategia,
+              ),
               const SizedBox(height: MSpace.md),
               Center(
                 child: NeuButton(
