@@ -6,12 +6,19 @@ import 'package:menthic/features/auth/splash_screen.dart';
 import 'package:menthic/router.dart';
 
 void main() {
-  test('router tem as 4 rotas nomeadas', () {
+  test('router tem as 6 rotas nomeadas', () {
     final names = menthicRouter.configuration.routes
         .whereType<GoRoute>()
         .map((r) => r.name)
         .toSet();
-    expect(names, {'splash', 'login', 'cadastro', 'home'});
+    expect(names, {
+      'splash',
+      'login',
+      'cadastro',
+      'onboarding',
+      'hoje',
+      'revisao',
+    });
   });
 
   testWidgets('rota inicial mostra a splash', (tester) async {

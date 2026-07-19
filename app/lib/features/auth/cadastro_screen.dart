@@ -36,7 +36,7 @@ class _CadastroScreenState extends ConsumerState<CadastroScreen> {
             confirm: _confirm.text,
             phone: _fone.text,
           );
-      if (mounted) context.goNamed('home');
+      if (mounted) context.goNamed('hoje');
     } on AuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -80,7 +80,7 @@ class _CadastroScreenState extends ConsumerState<CadastroScreen> {
                   GoogleButton(
                     onTap: () async {
                       await ref.read(localAuthProvider).signInWithGoogle();
-                      if (context.mounted) context.goNamed('home');
+                      if (context.mounted) context.goNamed('hoje');
                     },
                   ),
                   const SizedBox(height: MSpace.lg),

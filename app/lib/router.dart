@@ -2,7 +2,9 @@ import 'package:go_router/go_router.dart';
 import 'features/auth/splash_screen.dart';
 import 'features/auth/login_screen.dart';
 import 'features/auth/cadastro_screen.dart';
-import 'features/home/home_screen.dart';
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/today/today_screen.dart';
+import 'features/review/review_screen.dart';
 
 final menthicRouter = GoRouter(
   initialLocation: '/',
@@ -23,9 +25,19 @@ final menthicRouter = GoRouter(
       builder: (context, state) => const CadastroScreen(),
     ),
     GoRoute(
-      path: '/home',
-      name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      path: '/onboarding',
+      name: 'onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
+    GoRoute(
+      path: '/hoje',
+      name: 'hoje',
+      builder: (context, state) => const TodayScreen(),
+    ),
+    GoRoute(
+      path: '/revisao',
+      name: 'revisao',
+      builder: (context, state) => const ReviewScreen(),
     ),
   ],
 );
