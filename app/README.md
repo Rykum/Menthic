@@ -11,5 +11,9 @@ flutter run -d chrome
 
 ## Estado
 - Design system glass+neumorphism (`lib/design/`), paleta mint fiel aos protótipos.
-- Telas: Splash, Login, Cadastro (auth stub local), Home placeholder.
-- Próxima leva: Onboarding + Home real (render do OracleAnswer ligado ao engine).
+- Telas: Splash, Login, Cadastro (auth stub local), Onboarding (cold-start →
+  priors), Hoje (OracleAnswer real por eventos), Revisão noturna (desfechos →
+  TwinLearner).
+- Dados: eventos em `PersistentEventStore` (shared_preferences); priors do twin
+  serializados; SQLite fica p/ hardening Android.
+- Próxima leva: Simular, Meu Twin, Calibração.
