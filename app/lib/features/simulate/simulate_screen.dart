@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_engine/oracle_engine.dart';
 import 'package:oracle_store/oracle_store.dart';
 import '../../data/aged_priors.dart';
@@ -162,7 +161,7 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
                   ),
                   Text(
                     'tarefa chata (aversiva)',
-                    style: GoogleFonts.nunito(
+                    style: nunito(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: MColors.mintDeep,
@@ -198,7 +197,7 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
     await _recompute();
   }
 
-  TextStyle get _body => GoogleFonts.nunito(
+  TextStyle get _body => nunito(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: MColors.mintDeep,
@@ -279,7 +278,7 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
                           ),
                           child: Text(
                             'Adicionar compromisso',
-                            style: GoogleFonts.fredoka(
+                            style: fredoka(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: MColors.mintDeep,
@@ -294,7 +293,7 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
                           ),
                           child: Text(
                             'Recalcular',
-                            style: GoogleFonts.fredoka(
+                            style: fredoka(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: MColors.highlight,

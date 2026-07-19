@@ -1,4 +1,5 @@
 export 'tokens.dart';
+export 'fonts.dart';
 export 'theme.dart';
 export 'neumorphic.dart';
 export 'glass.dart';

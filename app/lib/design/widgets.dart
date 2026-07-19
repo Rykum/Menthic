@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'fonts.dart';
 import 'tokens.dart';
 import 'theme.dart';
 import 'neumorphic.dart';
@@ -39,7 +39,7 @@ class PillField extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8, bottom: 6),
           child: Text(
             label,
-            style: GoogleFonts.fredoka(
+            style: fredoka(
               fontSize: 22,
               fontWeight: FontWeight.w600,
               color: MColors.mintDeep,
@@ -52,7 +52,7 @@ class PillField extends StatelessWidget {
             controller: controller,
             obscureText: obscure,
             keyboardType: keyboardType,
-            style: GoogleFonts.nunito(
+            style: nunito(
               fontSize: 18,
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -87,7 +87,7 @@ class GoogleButton extends StatelessWidget {
           const SizedBox(width: 12),
           Text(
             'Continuar com o Google',
-            style: GoogleFonts.nunito(
+            style: nunito(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.black87,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_engine/oracle_engine.dart';
 import 'package:oracle_store/oracle_store.dart';
 import '../../data/aged_priors.dart';
@@ -62,10 +61,14 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final events = await store.query(from: from, to: to);
 
     double? sono;
+    var previsaoHoje = false;
     final agenda = <_CommitmentRow>[];
     for (final e in events) {
       if (e.type == EventTypes.sonoRegistrado) {
         sono = (e.payload['horas'] as num).toDouble();
+      }
+      if (e.type == EventTypes.previsaoEmitida) {
+        previsaoHoje = true;
       }
       if (e.type == EventTypes.compromissoCriado) {
         agenda.add(
@@ -84,6 +87,11 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       _sonoHoje = sono;
       _agenda = agenda;
     });
+    // Já houve previsão hoje: re-hidrata o card recomputando com os mesmos
+    // inputs (determinístico, seed 0) — sem emitir novo evento.
+    if (previsaoHoje && _answer == null) {
+      await _compute(persist: false);
+    }
   }
 
   double? _num(String raw) => double.tryParse(raw.replaceAll(',', '.'));
@@ -105,7 +113,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     await _reload();
   }
 
-  Future<void> _prever() async {
+  Future<void> _prever() => _compute(persist: true);
+
+  Future<void> _compute({required bool persist}) async {
     final store = await ref.read(eventStoreProvider.future);
     final priors = await loadAgedPriors(store, ref.read(priorsRepoProvider));
     final now = DateTime.now().toUtc();
@@ -124,17 +134,19 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       observedDays: days.length,
       seed: 0,
     );
-    await store.append(
-      EventDraft(
-        ts: now,
-        type: EventTypes.previsaoEmitida,
-        payload: {
-          'estimate': answer.estimate,
-          'low': answer.low,
-          'high': answer.high,
-        },
-      ),
-    );
+    if (persist) {
+      await store.append(
+        EventDraft(
+          ts: now,
+          type: EventTypes.previsaoEmitida,
+          payload: {
+            'estimate': answer.estimate,
+            'low': answer.low,
+            'high': answer.high,
+          },
+        ),
+      );
+    }
     if (!mounted) return;
     setState(() {
       _answer = answer;
@@ -193,7 +205,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                   ),
                   Text(
                     'tarefa chata (aversiva)',
-                    style: GoogleFonts.nunito(
+                    style: nunito(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: MColors.mintDeep,
@@ -238,7 +250,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     await _reload();
   }
 
-  TextStyle get _body => GoogleFonts.nunito(
+  TextStyle get _body => nunito(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: MColors.mintDeep,
@@ -286,7 +298,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                     ),
                     child: Text(
                       label,
-                      style: GoogleFonts.fredoka(
+                      style: fredoka(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: MColors.mintDeep,
@@ -334,7 +346,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 children: [
                   Text(
                     'Compromissos de hoje',
-                    style: GoogleFonts.fredoka(
+                    style: fredoka(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: MColors.mintDeep,
@@ -372,7 +384,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                       color: MColors.cyanLight,
                       child: Text(
                         'Adicionar compromisso',
-                        style: GoogleFonts.fredoka(
+                        style: fredoka(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: MColors.mintDeep,
@@ -404,7 +416,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                   color: MColors.cyanLight,
                   child: Text(
                     'Revisão do dia',
-                    style: GoogleFonts.fredoka(
+                    style: fredoka(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: MColors.mintDeep,

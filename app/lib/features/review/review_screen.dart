@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_learning/oracle_learning.dart';
 import 'package:oracle_store/oracle_store.dart';
 import '../../data/providers.dart';
@@ -105,7 +104,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     context.goNamed('hoje');
   }
 
-  TextStyle get _body => GoogleFonts.nunito(
+  TextStyle get _body => nunito(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: MColors.mintDeep,
@@ -119,7 +118,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Text(
         label,
-        style: GoogleFonts.nunito(
+        style: nunito(
           fontSize: 14,
           fontWeight: FontWeight.w700,
           color: selected ? MColors.highlight : MColors.mintDeep,
@@ -156,7 +155,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       children: [
                         Text(
                           item.cid,
-                          style: GoogleFonts.fredoka(
+                          style: fredoka(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: MColors.mintDeep,
