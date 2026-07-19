@@ -12,6 +12,9 @@ dependencies:
   go_router: ^14.2.0
   flutter_riverpod: ^2.5.1
   shared_preferences: ^2.3.2
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
   oracle_engine:
     path: ../engine
   oracle_store:
@@ -25,6 +28,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  fake_cloud_firestore: ^3.0.3
+  firebase_auth_mocks: ^0.14.1
 
 flutter:
   uses-material-design: true
