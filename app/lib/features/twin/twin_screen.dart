@@ -49,6 +49,9 @@ class _TwinScreenState extends ConsumerState<TwinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(eventStoreProvider, (prev, next) {
+      if (next.hasValue) _load();
+    });
     return MenthicScaffold(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24),

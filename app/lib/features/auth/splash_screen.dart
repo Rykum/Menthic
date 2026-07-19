@@ -23,7 +23,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.initState();
     _c.addStatusListener((s) async {
       if (s == AnimationStatus.completed && mounted) {
-        final logged = await ref.read(localAuthProvider).isLoggedIn();
+        final logged = await ref.read(authProvider).isLoggedIn();
         if (!mounted) return;
         if (!logged) {
           context.goNamed('login');

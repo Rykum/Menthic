@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1087809834833",
+    "project_id": "menthic",
+    "storage_bucket": "menthic.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087809834833:android:bebd50f160e9ee0c7f0d70",
+        "android_client_info": {
+          "package_name": "com.munhoz.menthic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOgUjGrFiWTTrk6S7MZqzfnNbTQGYOGAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

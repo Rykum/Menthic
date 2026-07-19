@@ -281,6 +281,10 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // O store pode trocar (local → Firestore) logo após o login; recarrega.
+    ref.listen(eventStoreProvider, (prev, next) {
+      if (next.hasValue) _reload();
+    });
     return MenthicScaffold(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -295,7 +299,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 IconButton(
                   icon: const Icon(Icons.logout, color: MColors.mintDeep),
                   onPressed: () async {
-                    await ref.read(localAuthProvider).signOut();
+                    await ref.read(authProvider).signOut();
                     if (context.mounted) context.goNamed('login');
                   },
                 ),

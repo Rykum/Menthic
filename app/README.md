@@ -15,8 +15,10 @@ flutter run -d chrome
   priors), Hoje (OracleAnswer real por eventos), Revisão noturna (desfechos →
   TwinLearner), Simular ("E se..." sem gravar), Meu Twin (Reality Model com
   incerteza) e Calibração (Brier + previsão×realidade).
-- Dados: eventos em `PersistentEventStore` (shared_preferences); priors do twin
-  serializados; SQLite fica p/ hardening Android.
+- Dados: logado → eventos sincronizados no Firestore (`users/{uid}/events`,
+  offline-first, regras por uid); sem login/Firebase → snapshot local
+  (shared_preferences). Auth real: Firebase e-mail/senha + Google (web);
+  priors do twin continuam locais (recomputáveis dos eventos).
 - Aprendizado: a Revisão coleta `dur_real` (o otimismo de agenda aprende) e
   a leitura dos priors aplica confiança adaptativa (`agePriors`, meia-vida
   90 dias — evidência velha regride ao prior neutro).

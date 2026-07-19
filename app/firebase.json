@@ -1,0 +1,25 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "menthic",
+          "appId": "1:1087809834833:android:bebd50f160e9ee0c7f0d70",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "menthic",
+          "configurations": {
+            "android": "1:1087809834833:android:bebd50f160e9ee0c7f0d70",
+            "web": "1:1087809834833:web:ba10f7c205791bc97f0d70"
+          }
+        }
+      }
+    }
+  }
+}
