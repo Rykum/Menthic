@@ -295,7 +295,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 IconButton(
                   icon: const Icon(Icons.logout, color: MColors.mintDeep),
                   onPressed: () async {
-                    await ref.read(localAuthProvider).signOut();
+                    await ref.read(authProvider).signOut();
                     if (context.mounted) context.goNamed('login');
                   },
                 ),

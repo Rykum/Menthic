@@ -28,7 +28,7 @@ class _CadastroScreenState extends ConsumerState<CadastroScreen> {
   Future<void> _submit() async {
     try {
       await ref
-          .read(localAuthProvider)
+          .read(authProvider)
           .signUp(
             email: _email.text,
             password: _senha.text,
@@ -78,8 +78,16 @@ class _CadastroScreenState extends ConsumerState<CadastroScreen> {
                   const SizedBox(height: MSpace.sm),
                   GoogleButton(
                     onTap: () async {
-                      await ref.read(localAuthProvider).signInWithGoogle();
-                      if (context.mounted) context.goNamed('hoje');
+                      try {
+                        await ref.read(authProvider).signInWithGoogle();
+                        if (context.mounted) context.goNamed('hoje');
+                      } on AuthException catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.message)));
+                        }
+                      }
                     },
                   ),
                   const SizedBox(height: MSpace.lg),

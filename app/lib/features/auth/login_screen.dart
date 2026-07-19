@@ -23,7 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _submit() async {
     try {
-      await ref.read(localAuthProvider).signIn(_email.text, _senha.text);
+      await ref.read(authProvider).signIn(_email.text, _senha.text);
       if (mounted) context.goNamed('hoje');
     } on AuthException catch (e) {
       if (mounted) {
@@ -55,8 +55,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: MSpace.sm),
                   GoogleButton(
                     onTap: () async {
-                      await ref.read(localAuthProvider).signInWithGoogle();
-                      if (context.mounted) context.goNamed('hoje');
+                      try {
+                        await ref.read(authProvider).signInWithGoogle();
+                        if (context.mounted) context.goNamed('hoje');
+                      } on AuthException catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.message)));
+                        }
+                      }
                     },
                   ),
                   const SizedBox(height: MSpace.lg),
