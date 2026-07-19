@@ -20,5 +20,8 @@ flutter run -d chrome
 - Aprendizado: a Revisão coleta `dur_real` (o otimismo de agenda aprende) e
   a leitura dos priors aplica confiança adaptativa (`agePriors`, meia-vida
   90 dias — evidência velha regride ao prior neutro).
+- Estratégias: `suggestStrategies` (engine) avalia perturbações do dia pelo
+  próprio simulador e o card mostra "Se seu objetivo é terminar tudo";
+  tocar numa estratégia grava `estrategia_aceita` (base do meta-aprendizado).
 - As 5 telas do blueprint doc 06 §9 estão completas. Próximo: hardening
   Android, integrações externas (`origin` já reserva o lugar).

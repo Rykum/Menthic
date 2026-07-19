@@ -5,3 +5,4 @@ export 'src/day.dart';
 export 'src/engine.dart';
 export 'src/sensitivity.dart';
 export 'src/oracle_answer.dart';
+export 'src/strategies.dart';

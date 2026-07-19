@@ -7,10 +7,14 @@ import '../../design/design.dart';
 class AnswerCard extends StatelessWidget {
   final OracleAnswer answer;
   final int observedDays;
+  final List<Strategy> strategies;
+  final void Function(Strategy)? onStrategyTap;
   const AnswerCard({
     super.key,
     required this.answer,
     required this.observedDays,
+    this.strategies = const [],
+    this.onStrategyTap,
   });
 
   String get _confLabel => switch (answer.confidence) {
@@ -91,6 +95,30 @@ class AnswerCard extends StatelessWidget {
           Text('Limitações', style: _section),
           const SizedBox(height: MSpace.xs),
           for (final l in answer.limitations) Text('• $l', style: _body),
+          if (strategies.isNotEmpty) ...[
+            const SizedBox(height: MSpace.md),
+            Text('Se seu objetivo é terminar tudo', style: _section),
+            const SizedBox(height: MSpace.xs),
+            for (final s in strategies)
+              GestureDetector(
+                onTap: onStrategyTap == null ? null : () => onStrategyTap!(s),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    '▸ ${s.label} → ~${(s.answer.estimate * 100).round()}% '
+                    '(${(s.answer.low * 100).round()}–'
+                    '${(s.answer.high * 100).round()}%) · '
+                    '+${(s.delta * 100).round()} pts',
+                    style: _body,
+                  ),
+                ),
+              ),
+            if (onStrategyTap != null)
+              Text(
+                'tocar numa estratégia anota que você pretende segui-la',
+                style: _body.copyWith(color: MColors.neutralGray, fontSize: 13),
+              ),
+          ],
         ],
       ),
     );

@@ -78,4 +78,48 @@ void main() {
     );
     expect(after, before);
   });
+
+  testWidgets('cenário ruim mostra estratégias e continua sem gravar', (
+    tester,
+  ) async {
+    final now = DateTime.now().toUtc();
+    final seed = jsonEncode([
+      {
+        'ts': now.toIso8601String(),
+        'type': 'sono_registrado',
+        'payload': {'horas': 3.0},
+        'origin': 'manual',
+      },
+      {
+        'ts': now.toIso8601String(),
+        'type': 'compromisso_criado',
+        'payload': {
+          'cid': 'estudo',
+          'inicio': 18.0,
+          'dur_prevista': 2.5,
+          'tipo': 'foco',
+          'prioridade': 2,
+          'aversivo': false,
+        },
+        'origin': 'manual',
+      },
+    ]);
+    SharedPreferences.setMockInitialValues({
+      'logged_in': true,
+      'event_store_v1': seed,
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(child: MaterialApp.router(routerConfig: _router())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Se seu objetivo'), findsOneWidget);
+    expect(find.textContaining('▸'), findsWidgets);
+
+    final after = (await SharedPreferences.getInstance()).getString(
+      'event_store_v1',
+    );
+    expect(after, seed);
+  });
 }

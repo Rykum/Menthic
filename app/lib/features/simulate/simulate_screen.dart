@@ -27,6 +27,7 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
   final _sono = TextEditingController(text: '7');
   List<_Hypo> _agenda = [];
   OracleAnswer? _answer;
+  List<Strategy> _strategies = [];
   int _observedDays = 0;
 
   @override
@@ -106,8 +107,17 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
       observedDays: _observedDays,
       seed: 0,
     );
+    final strategies = suggestStrategies(
+      state,
+      priors,
+      observedDays: _observedDays,
+      seed: 0,
+    );
     if (!mounted) return;
-    setState(() => _answer = answer);
+    setState(() {
+      _answer = answer;
+      _strategies = strategies;
+    });
   }
 
   Future<void> _abrirSheet() async {
@@ -308,7 +318,11 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
             ),
             if (_answer != null) ...[
               const SizedBox(height: MSpace.md),
-              AnswerCard(answer: _answer!, observedDays: _observedDays),
+              AnswerCard(
+                answer: _answer!,
+                observedDays: _observedDays,
+                strategies: _strategies,
+              ),
             ],
             const SizedBox(height: MSpace.lg),
           ],
