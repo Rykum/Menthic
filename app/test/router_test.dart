@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:menthic/features/auth/splash_screen.dart';
 import 'package:menthic/router.dart';
 
 void main() {
@@ -13,7 +15,9 @@ void main() {
   });
 
   testWidgets('rota inicial mostra a splash', (tester) async {
-    await tester.pumpWidget(MaterialApp.router(routerConfig: menthicRouter));
-    expect(find.text('splash'), findsOneWidget);
+    await tester.pumpWidget(
+      ProviderScope(child: MaterialApp.router(routerConfig: menthicRouter)),
+    );
+    expect(find.byType(SplashScreen), findsOneWidget);
   });
 }
