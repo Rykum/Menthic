@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_calibration/oracle_calibration.dart';
 import '../../data/providers.dart';
 import '../../design/design.dart';
@@ -30,7 +29,7 @@ class _CalibrationScreenState extends ConsumerState<CalibrationScreen> {
     setState(() => _pairs = pairPredictions(events));
   }
 
-  TextStyle get _body => GoogleFonts.nunito(
+  TextStyle get _body => nunito(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: MColors.mintDeep,
@@ -112,7 +111,7 @@ class _CalibrationScreenState extends ConsumerState<CalibrationScreen> {
                   children: [
                     Text(
                       'Dia a dia',
-                      style: GoogleFonts.fredoka(
+                      style: fredoka(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                         color: MColors.mintDeep,

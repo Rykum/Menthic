@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_store/oracle_store.dart';
 import '../../data/aged_priors.dart';
 import '../../data/providers.dart';
@@ -42,7 +41,7 @@ class _TwinScreenState extends ConsumerState<TwinScreen> {
     });
   }
 
-  TextStyle get _body => GoogleFonts.nunito(
+  TextStyle get _body => nunito(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: MColors.mintDeep,
@@ -83,7 +82,7 @@ class _TwinScreenState extends ConsumerState<TwinScreen> {
                     children: [
                       Text(
                         v.nome,
-                        style: GoogleFonts.fredoka(
+                        style: fredoka(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
                           color: MColors.mintDeep,

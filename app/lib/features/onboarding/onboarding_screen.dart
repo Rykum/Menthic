@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../data/providers.dart';
 import '../../design/design.dart';
 import 'archetype.dart';
@@ -35,7 +34,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       onTap: onTap,
       child: Text(
         label,
-        style: GoogleFonts.fredoka(
+        style: fredoka(
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: MColors.highlight,
@@ -55,7 +54,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
             child: Text(
               '$i',
-              style: GoogleFonts.fredoka(
+              style: fredoka(
                 fontSize: 22,
                 fontWeight: FontWeight.w600,
                 color: MColors.highlight,
@@ -71,7 +70,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     child: Text(
       text,
       textAlign: TextAlign.center,
-      style: GoogleFonts.fredoka(
+      style: fredoka(
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: MColors.mintDeep,

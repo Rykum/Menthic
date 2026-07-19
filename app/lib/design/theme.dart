@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'fonts.dart';
 import 'tokens.dart';
 
 ThemeData menthicTheme() {
@@ -12,11 +12,11 @@ ThemeData menthicTheme() {
     ),
     scaffoldBackgroundColor: MColors.cyanLight,
   );
-  return base.copyWith(textTheme: GoogleFonts.nunitoTextTheme(base.textTheme));
+  return base.copyWith(textTheme: base.textTheme.apply(fontFamily: 'Nunito'));
 }
 
 /// Estilo do título "bolha" (Fredoka), aproximação da tipografia do protótipo.
-TextStyle displayTitleStyle(double size) => GoogleFonts.fredoka(
+TextStyle displayTitleStyle(double size) => fredoka(
   fontSize: size,
   fontWeight: FontWeight.w700,
   color: MColors.mint,
