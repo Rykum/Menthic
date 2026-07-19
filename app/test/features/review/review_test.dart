@@ -84,6 +84,39 @@ void main() {
     expect(rho['b']!.toDouble(), closeTo(5.0, 1e-9));
   });
 
+  testWidgets('durou: mais → dur_real = 1.5×prevista e o otimismo aprende', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'logged_in': true,
+      'event_store_v1': _seedStore(),
+    });
+    await tester.pumpWidget(
+      ProviderScope(child: MaterialApp.router(routerConfig: _router())),
+    );
+    await tester.pumpAndSettle();
+
+    await _tap(tester, 'feito');
+    await _tap(tester, 'mais');
+    await _tap(tester, 'Salvar revisão');
+
+    final prefs = await SharedPreferences.getInstance();
+    final events = jsonDecode(prefs.getString('event_store_v1')!) as List;
+    final done = events.cast<Map>().firstWhere(
+      (e) => e['type'] == 'tarefa_concluida',
+    );
+    expect(
+      ((done['payload'] as Map)['dur_real'] as num).toDouble(),
+      closeTo(3.0, 1e-9),
+    );
+
+    // o: prior N(0.20, 0.10²) + obs ln(1.5) → média posterior sobe.
+    final j = (jsonDecode(prefs.getString(kPriorsKey)!) as Map)
+        .cast<String, dynamic>();
+    final oMean = (((j['o'] as Map)['mean']) as num).toDouble();
+    expect(oMean, greaterThan(0.20));
+  });
+
   testWidgets('não feito grava tarefa_nao_concluida', (tester) async {
     SharedPreferences.setMockInitialValues({
       'logged_in': true,
