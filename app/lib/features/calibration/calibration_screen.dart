@@ -37,6 +37,9 @@ class _CalibrationScreenState extends ConsumerState<CalibrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(eventStoreProvider, (prev, next) {
+      if (next.hasValue) _load();
+    });
     final pairs = _pairs;
     final data = pairs == null
         ? <PredOutcome>[]

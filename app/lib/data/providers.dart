@@ -22,11 +22,11 @@ final _authStateProvider = StreamProvider<fb.User?>((ref) {
 /// pelo cache do SDK). Senão → snapshot local (shared_preferences), como nas
 /// levas anteriores. O provider se refaz quando o login muda.
 final eventStoreProvider = FutureProvider<EventStore>((ref) async {
-  final user = Firebase.apps.isEmpty
-      ? null
-      : ref.watch(_authStateProvider).valueOrNull;
-  if (user != null) {
-    return FirestoreEventStore(FirebaseFirestore.instance, user.uid);
+  if (Firebase.apps.isNotEmpty) {
+    final user = await ref.watch(_authStateProvider.future);
+    if (user != null) {
+      return FirestoreEventStore(FirebaseFirestore.instance, user.uid);
+    }
   }
   final prefs = await SharedPreferences.getInstance();
   return PersistentEventStore.open(prefs);

@@ -215,6 +215,9 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(eventStoreProvider, (prev, next) {
+      if (next.hasValue) _loadFromToday();
+    });
     return MenthicScaffold(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
