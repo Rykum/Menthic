@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_store/oracle_store.dart';
+import '../../data/aged_priors.dart';
 import '../../data/providers.dart';
 import '../../design/design.dart';
 import 'trait_view.dart';
@@ -25,8 +26,8 @@ class _TwinScreenState extends ConsumerState<TwinScreen> {
   }
 
   Future<void> _load() async {
-    final priors = await ref.read(priorsRepoProvider).load();
     final store = await ref.read(eventStoreProvider.future);
+    final priors = await loadAgedPriors(store, ref.read(priorsRepoProvider));
     final outcomes = await store.query(
       types: [EventTypes.tarefaConcluida, EventTypes.tarefaNaoConcluida],
     );

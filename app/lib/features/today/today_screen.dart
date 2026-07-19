@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_engine/oracle_engine.dart';
 import 'package:oracle_store/oracle_store.dart';
+import '../../data/aged_priors.dart';
 import '../../data/providers.dart';
 import '../../design/design.dart';
 import '../auth/local_auth.dart';
@@ -106,7 +107,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
 
   Future<void> _prever() async {
     final store = await ref.read(eventStoreProvider.future);
-    final priors = await ref.read(priorsRepoProvider).load();
+    final priors = await loadAgedPriors(store, ref.read(priorsRepoProvider));
     final now = DateTime.now().toUtc();
     final state = await const DayStateDeriver().derive(store, now);
 
