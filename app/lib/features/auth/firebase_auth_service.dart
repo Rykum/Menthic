@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'local_auth.dart';
 
 /// Autenticação real (Firebase Auth, e-mail/senha). Erros do Firebase são
@@ -66,7 +67,15 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<void> signInWithGoogle() async {
-    throw AuthException('Entrar com Google ainda não está disponível.');
+    if (!kIsWeb) {
+      // Android precisa do SHA-1 + google_sign_in; fica para o hardening.
+      throw AuthException('Entrar com Google no Android chega em breve.');
+    }
+    try {
+      await _auth.signInWithPopup(fb.GoogleAuthProvider());
+    } on fb.FirebaseAuthException catch (e) {
+      _mapError(e);
+    }
   }
 
   @override
