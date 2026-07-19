@@ -12,6 +12,16 @@ class FirestoreEventStore implements EventStore {
   CollectionReference<Map<String, dynamic>> get _col =>
       _db.collection('users').doc(uid).collection('events');
 
+  // O relógio do Windows tem resolução grossa: dois appends no mesmo tick
+  // receberiam o mesmo microsecondsSinceEpoch (e deleteById apagaria ambos).
+  int _lastId = 0;
+  int _nextId() {
+    var id = DateTime.now().microsecondsSinceEpoch;
+    if (id <= _lastId) id = _lastId + 1;
+    _lastId = id;
+    return id;
+  }
+
   Event _fromDoc(Map<String, dynamic> d) => Event(
     id: (d['id'] as num).toInt(),
     ts: (d['ts'] as Timestamp).toDate().toUtc(),
@@ -22,7 +32,7 @@ class FirestoreEventStore implements EventStore {
 
   @override
   Future<Event> append(EventDraft draft) async {
-    final id = DateTime.now().microsecondsSinceEpoch;
+    final id = _nextId();
     final ts = draft.ts.toUtc();
     await _col.add({
       'id': id,

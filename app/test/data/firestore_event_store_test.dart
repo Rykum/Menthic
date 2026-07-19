@@ -47,6 +47,18 @@ void main() {
     expect(sonos.length, 2);
   });
 
+  test(
+    'appends em rajada geram ids únicos (regressão do relógio grosso)',
+    () async {
+      final ids = <int>{};
+      for (var i = 0; i < 50; i++) {
+        final e = await store.append(sono(DateTime.utc(2026, 7, 10, 8), 6.0));
+        ids.add(e.id);
+      }
+      expect(ids.length, 50);
+    },
+  );
+
   test('deleteById remove e clear zera', () async {
     final e = await store.append(sono(DateTime.utc(2026, 7, 10, 8), 6.0));
     await store.append(sono(DateTime.utc(2026, 7, 11, 8), 7.0));
