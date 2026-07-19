@@ -15,9 +15,11 @@ class ReviewScreen extends ConsumerStatefulWidget {
 
 class _ReviewItem {
   final String cid;
+  final double durPrevista;
   bool feito = false;
   int atrasoMin = 0;
-  _ReviewItem(this.cid);
+  double durFator = 1.0; // durou: 0.7 menos · 1.0 como previsto · 1.5 · 2.0
+  _ReviewItem(this.cid, this.durPrevista);
 }
 
 class _ReviewScreenState extends ConsumerState<ReviewScreen> {
@@ -43,7 +45,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     if (!mounted) return;
     setState(() {
       _items = [
-        for (final e in events) _ReviewItem(e.payload['cid'] as String),
+        for (final e in events)
+          _ReviewItem(
+            e.payload['cid'] as String,
+            (e.payload['dur_prevista'] as num?)?.toDouble() ?? 1.0,
+          ),
       ];
     });
   }
@@ -56,11 +62,17 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
     for (final item in _items) {
       if (item.feito) {
+        // Draft manual: o helper do store não expõe dur_real, e é ele que
+        // alimenta o aprendizado do otimismo de agenda (oObs = ln(real/prev)).
         await store.append(
-          tarefaConcluida(
+          EventDraft(
             ts: now,
-            cid: item.cid,
-            atrasoMin: item.atrasoMin.toDouble(),
+            type: EventTypes.tarefaConcluida,
+            payload: {
+              'cid': item.cid,
+              'atraso_min': item.atrasoMin.toDouble(),
+              'dur_real': item.durPrevista * item.durFator,
+            },
           ),
         );
       } else {
@@ -169,6 +181,21 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                               for (final m in const [0, 15, 30, 60])
                                 _chip('$m min', item.atrasoMin == m, () {
                                   setState(() => item.atrasoMin = m);
+                                }),
+                            ],
+                          ),
+                          const SizedBox(height: MSpace.xs),
+                          Text('durou:', style: _body),
+                          Wrap(
+                            children: [
+                              for (final (label, fator) in const [
+                                ('menos', 0.7),
+                                ('como previsto', 1.0),
+                                ('mais', 1.5),
+                                ('muito mais', 2.0),
+                              ])
+                                _chip(label, item.durFator == fator, () {
+                                  setState(() => item.durFator = fator);
                                 }),
                             ],
                           ),

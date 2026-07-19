@@ -76,7 +76,9 @@ class _CalibrationScreenState extends ConsumerState<CalibrationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${pairs.length} previsões avaliadas',
+                      pairs.length == 1
+                          ? '1 previsão avaliada'
+                          : '${pairs.length} previsões avaliadas',
                       style: displayTitleStyle(26),
                     ),
                     const SizedBox(height: MSpace.xs),

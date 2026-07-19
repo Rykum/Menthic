@@ -17,5 +17,8 @@ flutter run -d chrome
   incerteza) e Calibração (Brier + previsão×realidade).
 - Dados: eventos em `PersistentEventStore` (shared_preferences); priors do twin
   serializados; SQLite fica p/ hardening Android.
+- Aprendizado: a Revisão coleta `dur_real` (o otimismo de agenda aprende) e
+  a leitura dos priors aplica confiança adaptativa (`agePriors`, meia-vida
+  90 dias — evidência velha regride ao prior neutro).
 - As 5 telas do blueprint doc 06 §9 estão completas. Próximo: hardening
-  Android, decay de confiança no learning, integrações (`origin` já reserva).
+  Android, integrações externas (`origin` já reserva o lugar).

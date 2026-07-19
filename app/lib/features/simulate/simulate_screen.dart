@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oracle_engine/oracle_engine.dart';
 import 'package:oracle_store/oracle_store.dart';
+import '../../data/aged_priors.dart';
 import '../../data/providers.dart';
 import '../../design/design.dart';
 import '../today/answer_card.dart';
@@ -85,7 +86,8 @@ class _SimulateScreenState extends ConsumerState<SimulateScreen> {
   Future<void> _recompute() async {
     final horas = _num(_sono.text) ?? 7.0;
     final debt = (7.0 - horas).clamp(0.0, 24.0);
-    final priors = await ref.read(priorsRepoProvider).load();
+    final store = await ref.read(eventStoreProvider.future);
+    final priors = await loadAgedPriors(store, ref.read(priorsRepoProvider));
     final state = DayState(
       sleepDebt: debt,
       agenda: [
