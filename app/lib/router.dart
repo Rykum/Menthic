@@ -5,6 +5,9 @@ import 'features/auth/cadastro_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/today/today_screen.dart';
 import 'features/review/review_screen.dart';
+import 'features/simulate/simulate_screen.dart';
+import 'features/twin/twin_screen.dart';
+import 'features/calibration/calibration_screen.dart';
 
 final menthicRouter = GoRouter(
   initialLocation: '/',
@@ -38,6 +41,21 @@ final menthicRouter = GoRouter(
       path: '/revisao',
       name: 'revisao',
       builder: (context, state) => const ReviewScreen(),
+    ),
+    GoRoute(
+      path: '/simular',
+      name: 'simular',
+      builder: (context, state) => const SimulateScreen(),
+    ),
+    GoRoute(
+      path: '/twin',
+      name: 'twin',
+      builder: (context, state) => const TwinScreen(),
+    ),
+    GoRoute(
+      path: '/calibracao',
+      name: 'calibracao',
+      builder: (context, state) => const CalibrationScreen(),
     ),
   ],
 );

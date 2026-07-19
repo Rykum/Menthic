@@ -8,9 +8,9 @@ decisões sob incerteza — nunca prometendo prever o futuro.
 > disponíveis, estes são os cenários mais prováveis, com esta confiança e estas
 > limitações"* — e **compara estratégias** em vez de decidir pelo usuário.
 
-**Status:** 🧠 Núcleo headless completo · 🎨 UI Flutter com o loop diário
-(Onboarding → Hoje/OracleAnswer → Revisão noturna). Próximo: Simular/Meu
-Twin/Calibração.
+**Status:** 🧠 Núcleo headless completo · 🎨 UI Flutter com as 5 telas do
+blueprint (Hoje, Simular, Revisão, Meu Twin, Calibração) — o ciclo
+observação → previsão → desfecho → recalibração está fechado na UI.
 O blueprint técnico está em `docs/blueprint/`. O motor de inteligência já está
 construído e testado em **4 pacotes Dart puros** (88 testes, `dart analyze`
 limpo). A UI em Flutter vive em `app/` (design system glass+neumorphism e

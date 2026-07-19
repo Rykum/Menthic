@@ -266,6 +266,35 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               ],
             ),
             const SizedBox(height: MSpace.sm),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: MSpace.sm,
+              runSpacing: MSpace.xs,
+              children: [
+                for (final (label, route) in const [
+                  ('Simular', 'simular'),
+                  ('Meu Twin', 'twin'),
+                  ('Calibração', 'calibracao'),
+                ])
+                  NeuButton(
+                    onTap: () => context.goNamed(route),
+                    color: MColors.cyanLight,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      label,
+                      style: GoogleFonts.fredoka(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: MColors.mintDeep,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: MSpace.sm),
             GlassCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
