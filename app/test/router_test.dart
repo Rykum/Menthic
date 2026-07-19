@@ -6,7 +6,7 @@ import 'package:menthic/features/auth/splash_screen.dart';
 import 'package:menthic/router.dart';
 
 void main() {
-  test('router tem as 6 rotas nomeadas', () {
+  test('router tem as 9 rotas nomeadas', () {
     final names = menthicRouter.configuration.routes
         .whereType<GoRoute>()
         .map((r) => r.name)
@@ -18,6 +18,9 @@ void main() {
       'onboarding',
       'hoje',
       'revisao',
+      'simular',
+      'twin',
+      'calibracao',
     });
   });
 

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:menthic/features/today/today_screen.dart';
 import 'package:menthic/features/auth/login_screen.dart';
 import 'package:menthic/features/review/review_screen.dart';
+import 'package:menthic/features/simulate/simulate_screen.dart';
 
 GoRouter _router() => GoRouter(
   initialLocation: '/hoje',
@@ -24,6 +25,11 @@ GoRouter _router() => GoRouter(
       path: '/revisao',
       name: 'revisao',
       builder: (c, s) => const ReviewScreen(),
+    ),
+    GoRoute(
+      path: '/simular',
+      name: 'simular',
+      builder: (c, s) => const SimulateScreen(),
     ),
   ],
 );
@@ -66,6 +72,12 @@ void main() {
     expect(find.textContaining('faixa provável'), findsOneWidget);
     expect(find.textContaining('confiança'), findsOneWidget);
     expect(find.text('Limitações'), findsOneWidget);
+  });
+
+  testWidgets('atalho Simular navega', (tester) async {
+    await _pump(tester);
+    await _tap(tester, 'Simular');
+    expect(find.byType(SimulateScreen), findsOneWidget);
   });
 
   testWidgets('Sair desloga e volta ao login', (tester) async {
