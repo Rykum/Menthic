@@ -61,10 +61,14 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final events = await store.query(from: from, to: to);
 
     double? sono;
+    var previsaoHoje = false;
     final agenda = <_CommitmentRow>[];
     for (final e in events) {
       if (e.type == EventTypes.sonoRegistrado) {
         sono = (e.payload['horas'] as num).toDouble();
+      }
+      if (e.type == EventTypes.previsaoEmitida) {
+        previsaoHoje = true;
       }
       if (e.type == EventTypes.compromissoCriado) {
         agenda.add(
@@ -83,6 +87,11 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       _sonoHoje = sono;
       _agenda = agenda;
     });
+    // Já houve previsão hoje: re-hidrata o card recomputando com os mesmos
+    // inputs (determinístico, seed 0) — sem emitir novo evento.
+    if (previsaoHoje && _answer == null) {
+      await _compute(persist: false);
+    }
   }
 
   double? _num(String raw) => double.tryParse(raw.replaceAll(',', '.'));
@@ -104,7 +113,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     await _reload();
   }
 
-  Future<void> _prever() async {
+  Future<void> _prever() => _compute(persist: true);
+
+  Future<void> _compute({required bool persist}) async {
     final store = await ref.read(eventStoreProvider.future);
     final priors = await loadAgedPriors(store, ref.read(priorsRepoProvider));
     final now = DateTime.now().toUtc();
@@ -123,17 +134,19 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       observedDays: days.length,
       seed: 0,
     );
-    await store.append(
-      EventDraft(
-        ts: now,
-        type: EventTypes.previsaoEmitida,
-        payload: {
-          'estimate': answer.estimate,
-          'low': answer.low,
-          'high': answer.high,
-        },
-      ),
-    );
+    if (persist) {
+      await store.append(
+        EventDraft(
+          ts: now,
+          type: EventTypes.previsaoEmitida,
+          payload: {
+            'estimate': answer.estimate,
+            'low': answer.low,
+            'high': answer.high,
+          },
+        ),
+      );
+    }
     if (!mounted) return;
     setState(() {
       _answer = answer;

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,6 +73,55 @@ void main() {
     expect(find.textContaining('faixa provável'), findsOneWidget);
     expect(find.textContaining('confiança'), findsOneWidget);
     expect(find.text('Limitações'), findsOneWidget);
+  });
+
+  testWidgets('previsão de hoje re-hidrata após reload, sem novo evento', (
+    tester,
+  ) async {
+    final now = DateTime.now().toUtc();
+    SharedPreferences.setMockInitialValues({
+      'logged_in': true,
+      'event_store_v1': jsonEncode([
+        {
+          'ts': now.toIso8601String(),
+          'type': 'sono_registrado',
+          'payload': {'horas': 6.0},
+          'origin': 'manual',
+        },
+        {
+          'ts': now.toIso8601String(),
+          'type': 'compromisso_criado',
+          'payload': {
+            'cid': 'estudo',
+            'inicio': 9.0,
+            'dur_prevista': 2.0,
+            'tipo': 'foco',
+            'prioridade': 2,
+            'aversivo': false,
+          },
+          'origin': 'manual',
+        },
+        {
+          'ts': now.toIso8601String(),
+          'type': 'previsao_emitida',
+          'payload': {'estimate': 0.9, 'low': 0.8, 'high': 1.0},
+          'origin': 'manual',
+        },
+      ]),
+    });
+    await _pump(tester);
+
+    // Card visível sem tocar em "Prever meu dia".
+    expect(find.text('Cumprir a agenda de hoje'), findsOneWidget);
+
+    // E nenhuma previsão nova foi gravada.
+    final prefs = await SharedPreferences.getInstance();
+    final events = jsonDecode(prefs.getString('event_store_v1')!) as List;
+    final previsoes = events
+        .cast<Map>()
+        .where((e) => e['type'] == 'previsao_emitida')
+        .length;
+    expect(previsoes, 1);
   });
 
   testWidgets('atalho Simular navega', (tester) async {
